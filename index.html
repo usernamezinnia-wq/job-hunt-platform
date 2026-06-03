@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>求职招聘平台</title>
+    <style>
+        body{padding:20px;font-family:微软雅黑;}
+        .job-card{
+            border:1px solid #e5e7eb;
+            border-radius:8px;
+            padding:16px;
+            margin-bottom:14px;
+            max-width:800px;
+        }
+        .job-title{font-size:19px;color:#222;margin:0 0 8px;}
+        .info{color:#555;margin:4px 0;}
+        .tag{
+            background:#eef6ff;
+            color:#2678d9;
+            padding:3px 8px;
+            border-radius:4px;
+            display:inline-block;
+            margin:3px;
+            font-size:13px;
+        }
+    </style>
+</head>
+<body>
+    <h1>热门招聘岗位</h1>
+    <div id="job-list"></div>
+
+    <script>
+        // 请求后端接口
+        fetch("http://127.0.0.1:5000/api/jobs")
+        .then(res => res.json())
+        .then(jobArr => {
+            let htmlStr = "";
+            jobArr.forEach(item=>{
+                // 拼接单个岗位卡片
+                htmlStr += `
+                <div class="job-card">
+                    <h3 class="job-title">${item.title}</h3>
+                    <p class="info">公司：${item.company} | 薪资：${item.salary} | 规模：${item.size}</p>
+                    <p class="info">岗位简介：${item.jobDescription}</p>
+                    <div>
+                        ${item.tags.map(tag=>`<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <p class="info">福利：${item.perks.join('、')}</p>
+                </div>
+                `
+            })
+            document.getElementById("job-list").innerHTML = htmlStr
+        })
+    </script>
+</body>
+</html>
